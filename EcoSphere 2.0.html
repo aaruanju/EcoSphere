@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSphere - Smart Farming Assistant</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#b9d9b6;
+margin:0;
+padding:15px;
+line-height:1.5;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 4px 15px rgba(0,0,0,0.15);
+}
+
+h1{
+text-align:center;
+color:#2e7d32;
+}
+
+h2{
+color:#2e7d32;
+}
+
+button{
+background:#4caf50;
+color:white;
+border:none;
+padding:15px;
+width:100%;
+margin:8px 0;
+font-size:18px;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#388e3c;
+}
+
+.small-btn{
+width:auto;
+padding:8px 15px;
+font-size:14px;
+display:inline-block;
+margin:5px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.section{
+display:none;
+background:#f9f9f9;
+padding:20px;
+border-radius:12px;
+margin-top:15px;
+}
+
+.active{
+display:block;
+}
+
+.about-box{
+background:#edf8ed;
+padding:20px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.score{
+font-size:25px;
+font-weight:bold;
+color:green;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌿 EcoSphere 🌿</h1>
+
+<div class="about-box">
+<h2>Smart Farming Assistant</h2>
+<p>
+🌿 EcoSphere 2.0 is a smart farming assistant that helps farmers with crop recommendations, expense tracking, seed calculation, profit estimation, irrigation reminders, and disease detection for sustainable agriculture.It also gives a farm score which is calculated on how much the farmer uses the app. 
+</p>
+</div>
+
+<button onclick="showSection('advisor')">
+🌾 1. Crop Advisor
+</button>
+
+<button onclick="showSection('log')">
+📝 2. Farm Log + Total
+</button>
+
+<button onclick="showSection('seed')">
+🌱 3. Seed Calculator
+</button>
+
+<button onclick="showSection('harvest')">
+🌾 4. Harvest Estimator
+</button>
+
+<button onclick="showSection('weather')">
+🌤 5. Weather Advice
+</button>
+
+<button onclick="showSection('profit')">
+💰 6. Profit Calculator
+</button>
+
+<button onclick="showSection('water')">
+💧 7. Irrigation Reminder
+</button>
+
+<button onclick="showSection('disease')">
+🩺 8. Disease Checker
+</button>
+
+<button onclick="showSection('score')">
+⭐ 9. Farm Health Score
+</button>
+
+
+<!-- Crop Advisor -->
+
+<div id="advisor" class="section">
+
+<h2>Crop Advisor</h2>
+
+<label>Soil Type</label>
+
+<select id="soil">
+<option value="1">Sandy</option>
+<option value="2">Loamy</option>
+<option value="3">Clay</option>
+</select>
+
+<label>Rainfall</label>
+
+<select id="rain">
+<option value="1">Low</option>
+<option value="2">Medium</option>
+<option value="3">High</option>
+</select>
+
+<label>Season</label>
+
+<select id="season">
+<option value="1">Summer</option>
+<option value="2">Monsoon</option>
+<option value="3">Winter</option>
+</select>
+
+<button onclick="getRecommendation()">
+Get Recommendation
+</button>
+
+<div class="card">
+<p id="recommendResult"></p>
+</div>
+
+</div>
+
+
+<!-- Farm Log -->
+
+<div id="log" class="section">
+
+<h2>Farm Log + Total</h2>
+
+<input
+type="text"
+id="activity"
+placeholder="What did you do today?">
+
+<input
+type="number"
+id="expense"
+placeholder="Expense (Rs)">
+
+<button onclick="addLog()">
+Add Entry
+</button>
+
+<button class="small-btn"
+onclick="finishLog()">
+Show Total
+</button>
+
+<button class="small-btn"
+onclick="clearLog()">
+Clear All
+</button>
+
+<div id="logList"></div>
+
+<p id="totalShow"></p>
+
+</div>
+
+
+<!-- Seed Calculator -->
+
+<div id="seed" class="section">
+
+<h2>Seed Calculator</h2>
+
+<input
+type="number"
+id="acres"
+placeholder="Field size (acres)">
+
+<select id="crop">
+
+<option value="1">
+Rice (30kg/acre)
+</option>
+
+<option value="2">
+Wheat (25kg/acre)
+</option>
+
+<option value="3">
+Millet (8kg/acre)
+</option>
+
+<option value="4">
+Maize (20kg/acre)
+</option>
+
+<option value="5">
+Cotton (5kg/acre)
+</option>
+
+</select>
+
+<button onclick="calculateSeeds()">
+Calculate Seeds
+</button>
+
+<div class="card">
+<p id="seedResult"></p>
+</div>
+
+</div>
+
+
+<!-- Harvest Estimator -->
+
+<div id="harvest" class="section">
+
+<h2>Harvest Estimator</h2>
+
+<input
+type="number"
+id="yield"
+placeholder="Yield per acre (kg)">
+
+<input
+type="number"
+id="hacres"
+placeholder="Field size (acres)">
+
+<input
+type="number"
+id="price"
+placeholder="Price per kg (Rs)">
+
+<button onclick="estimateHarvest()">
+Calculate Earnings
+</button>
+
+<div class="card">
+<p id="harvestResult"></p>
+</div>
+
+</div>
+
+<!-- END OF PART 1 -->
+<!-- Weather Advice -->
+
+<div id="weather" class="section">
+
+<h2>Weather Advice</h2>
+
+<select id="weatherType">
+
+<option value="sunny">☀ Sunny</option>
+
+<option value="rainy">🌧 Rainy</option>
+
+<option value="cloudy">☁ Cloudy</option>
+
+</select>
+
+<button onclick="weatherAdvice()">
+Get Advice
+</button>
+
+<div class="card">
+<p id="weatherResult"></p>
+</div>
+
+</div>
+
+
+<!-- Profit Calculator -->
+
+<div id="profit" class="section">
+
+<h2>Profit Calculator</h2>
+
+<input
+type="number"
+id="income"
+placeholder="Total Income (Rs)">
+
+<input
+type="number"
+id="expenses"
+placeholder="Total Expenses (Rs)">
+
+<button onclick="calculateProfit()">
+Calculate Profit
+</button>
+
+<div class="card">
+<p id="profitResult"></p>
+</div>
+
+</div>
+
+
+<!-- Irrigation Reminder -->
+
+<div id="water" class="section">
+
+<h2>Irrigation Reminder</h2>
+
+<select id="waterCrop">
+
+<option value="rice">
+Rice
+</option>
+
+<option value="wheat">
+Wheat
+</option>
+
+<option value="cotton">
+Cotton
+</option>
+
+<option value="maize">
+Maize
+</option>
+
+</select>
+
+<button onclick="waterReminder()">
+Get Reminder
+</button>
+
+<div class="card">
+<p id="waterResult"></p>
+</div>
+
+</div>
+
+
+<!-- Disease Checker -->
+
+<div id="disease" class="section">
+
+<h2>Disease Checker</h2>
+
+<select id="symptom">
+
+<option value="yellow">
+Yellow Leaves
+</option>
+
+<option value="brown">
+Brown Spots
+</option>
+
+<option value="wilting">
+Wilting
+</option>
+
+</select>
+
+<button onclick="checkDisease()">
+Check Problem
+</button>
+
+<div class="card">
+<p id="diseaseResult"></p>
+</div>
+
+</div>
+
+
+<!-- Farm Health Score -->
+
+<div id="score" class="section">
+
+<h2>Farm Health Score</h2>
+
+<p>
+Press the button below to evaluate your farm management.
+</p>
+
+<button onclick="calculateScore()">
+Calculate Score
+</button>
+
+<div class="card">
+
+<div class="score">
+<p id="scoreResult"></p>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let allEntries=[];
+
+function showSection(section){
+
+document.querySelectorAll(".section").forEach(
+s=>s.classList.remove("active")
+);
+
+document.getElementById(section)
+.classList.add("active");
+
+if(section==="log"){
+showAllLogs();
+}
+
+}
+
+
+function addLog(){
+
+const act=document.getElementById(
+"activity").value.trim();
+
+const exp=document.getElementById(
+"expense").value;
+
+if(act===""){
+alert("Please enter an activity.");
+return;
+}
+
+allEntries.push({
+act:act,
+exp:exp||0
+});
+
+showAllLogs();
+
+document.getElementById(
+"activity").value="";
+
+document.getElementById(
+"expense").value="";
+
+}
+
+
+function showAllLogs(){
+
+let html="";
+let total=0;
+
+for(let i=0;i<allEntries.length;i++){
+
+const item=allEntries[i];
+
+html+=`
+<p>
+<strong>${item.act}</strong>
+- Rs.${item.exp}
+
+<button
+class="small-btn"
+onclick="deleteOne(${i})">
+Delete
+</button>
+
+</p>
+`;
+
+total+=Number(item.exp);
+
+}
+
+document.getElementById(
+"logList").innerHTML=
+html||"<p>No entries yet</p>";
+
+document.getElementById(
+"totalShow").innerHTML=
+"Total expenses: Rs."+total;
+
+}
+
+
+function deleteOne(i){
+
+allEntries.splice(i,1);
+
+showAllLogs();
+
+}
+
+
+function finishLog(){
+
+showAllLogs();
+
+}
+
+
+function clearLog(){
+
+allEntries=[];
+
+showAllLogs();
+
+}
+
+
+function getRecommendation(){
+
+let soil=document.getElementById(
+"soil").value;
+
+let rain=document.getElementById(
+"rain").value;
+
+let rec="Vegetables like Tomato and Okra";
+
+if(soil==1&&rain==1)
+rec="Millet or Groundnut";
+
+else if(soil==2&&rain==2)
+rec="Rice or Wheat";
+
+else if(soil==3&&rain==3)
+rec="Sugarcane or Maize";
+
+document.getElementById(
+"recommendResult").innerHTML=
+rec;
+
+}
+
+
+function calculateSeeds(){
+
+let acres=parseFloat(
+document.getElementById(
+"acres").value)||0;
+
+let crop=document.getElementById(
+"crop").value;
+
+let seeds=0;
+
+if(crop==1)
+seeds=acres*30;
+
+else if(crop==2)
+seeds=acres*25;
+
+else if(crop==3)
+seeds=acres*8;
+
+else if(crop==4)
+seeds=acres*20;
+
+else if(crop==5)
+seeds=acres*5;
+
+document.getElementById(
+"seedResult").innerHTML=
+"Seeds needed: "+seeds+" kg";
+
+}
+
+
+function estimateHarvest(){
+
+let yieldVal=parseFloat(
+document.getElementById(
+"yield").value)||0;
+
+let acres=parseFloat(
+document.getElementById(
+"hacres").value)||0;
+
+let price=parseFloat(
+document.getElementById(
+"price").value)||0;
+
+let total=yieldVal*acres*price;
+
+document.getElementById(
+"harvestResult").innerHTML=
+"Estimated earnings: Rs."+total;
+
+}
+
+
+function weatherAdvice(){
+
+let weather=
+document.getElementById(
+"weatherType").value;
+
+let msg="";
+
+if(weather==="sunny")
+msg="☀ Water crops in the evening.";
+
+else if(weather==="rainy")
+msg="🌧 Avoid extra irrigation.";
+
+else
+msg="☁ Good conditions for planting.";
+
+document.getElementById(
+"weatherResult").innerHTML=msg;
+
+}
+
+
+function calculateProfit(){
+
+let income=parseFloat(
+document.getElementById(
+"income").value)||0;
+
+let expenses=parseFloat(
+document.getElementById(
+"expenses").value)||0;
+
+let profit=income-expenses;
+
+if(profit>=0)
+document.getElementById(
+"profitResult").innerHTML=
+"🟢 Profit = Rs."+profit;
+
+else
+document.getElementById(
+"profitResult").innerHTML=
+"🔴 Loss = Rs."+Math.abs(profit);
+
+}
+
+
+function waterReminder(){
+
+let crop=document.getElementById(
+"waterCrop").value;
+
+let msg="";
+
+if(crop==="rice")
+msg="💧 Water every 3 days.";
+
+else if(crop==="wheat")
+msg="💧 Water every 7 days.";
+
+else if(crop==="cotton")
+msg="💧 Water every 5 days.";
+
+else
+msg="💧 Water every 4 days.";
+
+document.getElementById(
+"waterResult").innerHTML=msg;
+
+}
+
+
+function checkDisease(){
+
+let symptom=document.getElementById(
+"symptom").value;
+
+let msg="";
+
+if(symptom==="yellow")
+msg="Yellow leaves: Nitrogen deficiency. Use nitrogen fertilizer.";
+
+else if(symptom==="brown")
+msg="Brown spots: Possible fungal disease. Use fungicide.";
+
+else
+msg="Wilting: Crop may need more water.";
+
+document.getElementById(
+"diseaseResult").innerHTML=msg;
+
+}
+
+
+function calculateScore(){
+
+let score=0;
+
+if(allEntries.length>0)
+score+=10;
+
+if(document.getElementById(
+"seedResult").innerHTML!=="")
+score+=10;
+
+if(document.getElementById(
+"harvestResult").innerHTML!=="")
+score+=10;
+
+if(document.getElementById(
+"profitResult").innerHTML!=="")
+score+=10;
+
+let stars="⭐";
+
+if(score>=20)
+stars="⭐⭐⭐";
+
+if(score>=30)
+stars="⭐⭐⭐⭐";
+
+if(score>=40)
+stars="⭐⭐⭐⭐⭐";
+
+document.getElementById(
+"scoreResult").innerHTML=
+stars+"<br>"+score+
+"/40<br>Excellent Farm Management!";
+
+}
+
+</script>
+
+</body>
+</html>
